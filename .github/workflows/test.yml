@@ -21,10 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
+        id: cygwin
         with:
           packages: curl,patch
       - name: Run shell
         run: |
           ls
           echo "hello"
-        shell: C:\cygwin64\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        shell: ${{ steps.cygwin.outputs.bash }}

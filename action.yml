@@ -1,6 +1,7 @@
 name: 'Setup Cygwin'
 description: 'Install Cygwin'
-author: 'Linden Lab'
+author: 'Linden Research, Inc.'
+
 inputs:
   packages:
     description: 'Cygwin packages to install'
@@ -13,6 +14,12 @@ inputs:
   local-packages:
     description: 'Package download directory'
     default: 'C:\TEMP\cygwinpackages'
+
+outputs:
+  bash:
+    description: 'Cygwin shell'
+    value: ${{ inputs.root }}\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
 runs:
   using: 'node12'
   main: 'dist/index.js'

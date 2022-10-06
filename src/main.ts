@@ -37,11 +37,7 @@ async function installCygwin(
   local: string,
   root: string
 ): Promise<void> {
-  const setup = await getCygwin()
-
-  const cachePaths = [
-    path.join(local, encodeURIComponent(site).toLocaleLowerCase())
-  ]
+  const cachePaths = [root]
 
   const packagesCsv = packages.join(',')
 
@@ -54,18 +50,22 @@ async function installCygwin(
     .update(site)
     .digest('hex')
   // Bust cache every month to ensure updated packages are stored
-  const cacheKey = `cygwin-${year}-${month}-${cacheHash}`
+  const cacheKey = `cygwin-root-${year}-${month}-${cacheHash}`
 
   // Attempt to restore cache but do not block the build if an exception
   // occurs. @actions/cache has proven unreliable in the past ex.
   // https://github.com/actions/cache/issues/698
   const cacheHit = await warnOnError<string | undefined>(async () => {
-    return cache.restoreCache(cachePaths, cacheKey, [
-      `cygwin-${year}-${month}-`,
-      `cygwin-${year}`,
-      'cygwin-'
-    ])
+    return cache.restoreCache(cachePaths, cacheKey)
   })
+
+  if (cacheHit === cacheKey) {
+    console.log(`♻️ Re-using previously cached cygwin...`)
+    return
+  }
+
+  console.log(`⬇️ Installing cygwin at ${root}...`)
+  const setup = await getCygwin()
 
   await exec.exec(setup, [
     '-q',
@@ -79,11 +79,9 @@ async function installCygwin(
     root
   ])
 
-  if (cacheHit !== cacheKey) {
-    await warnOnError(async () => {
-      await cache.saveCache(cachePaths, cacheKey)
-    })
-  }
+  await warnOnError(async () => {
+    await cache.saveCache(cachePaths, cacheKey)
+  })
 }
 
 async function run(): Promise<void> {

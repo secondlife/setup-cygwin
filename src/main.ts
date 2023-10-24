@@ -8,7 +8,7 @@ import {warnOnError} from './util'
 
 const CYGWIN_SETUP = 'setup-x86_64.exe'
 const TOOL_NAME = 'cygwin-setup'
-const LATEST_VERSION = '3.3'
+const LATEST_VERSION = '3.4'
 const CYGWIN_URL = 'https://cygwin.com/setup-x86_64.exe'
 
 async function downloadCygwin(): Promise<string> {

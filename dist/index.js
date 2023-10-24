@@ -48,7 +48,7 @@ const tc = __importStar(__nccwpck_require__(7784));
 const util_1 = __nccwpck_require__(4024);
 const CYGWIN_SETUP = 'setup-x86_64.exe';
 const TOOL_NAME = 'cygwin-setup';
-const LATEST_VERSION = '3.3';
+const LATEST_VERSION = '3.4';
 const CYGWIN_URL = 'https://cygwin.com/setup-x86_64.exe';
 function downloadCygwin() {
     return __awaiter(this, void 0, void 0, function* () {
